@@ -62,6 +62,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       localStorage.setItem("discord_user", JSON.stringify(user));
       setUser(user);
+      
+      // No realizamos la navegación aquí para permitir que el componente Login la maneje
     } catch (error) {
       throw error;
     } finally {

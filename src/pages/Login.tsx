@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { AlertCircle, Lock, User, Shield } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import useAuth from "@/hooks/useAuth";
 
 const formSchema = z.object({
   username: z.string().min(1, "El nombre de usuario es requerido"),
@@ -22,6 +22,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [roleId, setRoleId] = useState("");
+  const { login } = useAuth();
   
   useEffect(() => {
     // Check if role ID is already set
@@ -61,23 +62,10 @@ const Login: React.FC = () => {
         throw new Error("No se ha configurado un ID de rol para la verificación");
       }
 
-      // Simulate Discord authentication (in a real app, would call Discord API)
-      const mockSuccessLogin = values.username.length > 2 && values.password.length > 2;
+      // Usar el hook de autenticación para iniciar sesión
+      await login(values.username, values.password);
       
-      if (!mockSuccessLogin) {
-        throw new Error("Credenciales de Discord inválidas");
-      }
-      
-      // Mock user object with roles (in a real app, would get from Discord API)
-      const user = {
-        id: "1234567890",
-        username: values.username,
-        roles: [expectedRoleId] // Mock that user has the expected role
-      };
-      
-      // Store user in localStorage
-      localStorage.setItem("discord_user", JSON.stringify(user));
-      
+      // Si el login es exitoso, mostramos mensaje y redirigimos
       toast.success("Inicio de sesión exitoso");
       navigate("/");
     } catch (err) {
