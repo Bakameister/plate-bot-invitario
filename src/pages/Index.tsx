@@ -5,9 +5,10 @@ import InventoryItem from '@/components/InventoryItem';
 import CommandPanel from '@/components/CommandPanel';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Award, Package, Users, Activity, Database } from 'lucide-react';
+import { Award, Package, Users, Activity, Database, LogOut } from 'lucide-react';
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import useAuth from '@/hooks/useAuth';
 
 // Mock data for badges
 const badges = [
@@ -72,6 +73,7 @@ const inventoryItems = [
 const Index: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('badges');
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     // Simulate loading data
@@ -100,7 +102,10 @@ const Index: React.FC = () => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl font-semibold text-bot-dark">Panel de Control</h2>
-              <p className="text-bot-text/70 mt-1">Gestiona tu sistema de placas e inventarios</p>
+              <p className="text-bot-text/70 mt-1">
+                Gestiona tu sistema de placas e inventarios • 
+                {user && <span className="font-medium"> Conectado como {user.username}</span>}
+              </p>
             </div>
             <div className="flex space-x-3">
               <Button variant="outline" className="space-x-2">
@@ -116,6 +121,10 @@ const Index: React.FC = () => {
               <Button variant="default" className="bg-bot-blue hover:bg-bot-accent space-x-2">
                 <Activity size={16} />
                 <span>Estadísticas</span>
+              </Button>
+              <Button variant="outline" onClick={logout} className="space-x-2 text-destructive">
+                <LogOut size={16} />
+                <span>Salir</span>
               </Button>
             </div>
           </div>
