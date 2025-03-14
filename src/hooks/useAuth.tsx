@@ -1,6 +1,7 @@
 
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -52,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("No role ID configured for verification");
       }
 
+      // Mock user object with the expected role
       const user = {
         id: "1234567890",
         username,
@@ -70,6 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     localStorage.removeItem("discord_user");
     setUser(null);
+    toast.info("Has cerrado sesión");
     navigate("/login");
   };
 
