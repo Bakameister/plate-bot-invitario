@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import BadgeCard from '@/components/BadgeCard';
@@ -6,8 +5,9 @@ import InventoryItem from '@/components/InventoryItem';
 import CommandPanel from '@/components/CommandPanel';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Award, Package, Users, Activity } from 'lucide-react';
+import { Award, Package, Users, Activity, Database } from 'lucide-react';
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 // Mock data for badges
 const badges = [
@@ -106,6 +106,12 @@ const Index: React.FC = () => {
               <Button variant="outline" className="space-x-2">
                 <Users size={16} />
                 <span>Ver usuarios</span>
+              </Button>
+              <Button variant="outline" asChild className="space-x-2">
+                <Link to="/connections">
+                  <Database size={16} />
+                  <span>Conexiones</span>
+                </Link>
               </Button>
               <Button variant="default" className="bg-bot-blue hover:bg-bot-accent space-x-2">
                 <Activity size={16} />
