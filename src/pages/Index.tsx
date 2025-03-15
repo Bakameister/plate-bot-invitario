@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Dashboard from '@/components/Dashboard';
@@ -129,7 +128,16 @@ const Index: React.FC = () => {
   if (!mounted) return null;
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-[#2a2a20] via-[#3a3325] to-[#2a2a20] p-6 pb-20 transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+    <div 
+      className={`min-h-screen p-6 pb-20 transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}
+      style={{
+        backgroundImage: 'url("/sheriff-department-bg.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       <div className="max-w-7xl mx-auto">
         <Header />
         

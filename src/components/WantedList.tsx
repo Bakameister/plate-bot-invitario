@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -101,7 +100,7 @@ const WantedList: React.FC = () => {
   };
   
   return (
-    <div className="glass rounded-xl p-6 mb-8 animate-slide-up bg-gradient-to-r from-[#3a3325]/80 to-[#4a5741]/80 border-2 border-[#5d6945]/50">
+    <div className="rounded-xl p-6 mb-8 animate-slide-up backdrop-blur-md bg-gradient-to-r from-[#3a3325]/80 to-[#4a5741]/80 border-2 border-[#5d6945]/50 shadow-md">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-semibold text-[#f5f0dc]">Orden y captura</h2>
         <div className="flex space-x-3">
@@ -109,7 +108,7 @@ const WantedList: React.FC = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#f5f0dc]/50" size={16} />
             <Input 
               placeholder="Buscar sospechoso..." 
-              className="pl-10 bg-[#2a2a20] border-[#5d6945] text-[#f5f0dc]"
+              className="pl-10 bg-[#2a2a20]/70 border-[#5d6945] text-[#f5f0dc]"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -125,32 +124,32 @@ const WantedList: React.FC = () => {
       </div>
       
       {showForm && (
-        <div className="mb-6 p-4 rounded-lg bg-[#2a2a20]/50 border border-[#5d6945]">
+        <div className="mb-6 p-4 rounded-lg bg-[#2a2a20]/70 border border-[#5d6945]">
           <h3 className="text-lg font-medium text-[#f5f0dc] mb-4">Nuevo sospechoso</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Input 
               placeholder="Nombre" 
               value={newPerson.name}
               onChange={(e) => setNewPerson({...newPerson, name: e.target.value})}
-              className="bg-[#2a2a20] border-[#5d6945] text-[#f5f0dc]"
+              className="bg-[#2a2a20]/70 border-[#5d6945] text-[#f5f0dc]"
             />
             <Input 
               placeholder="Apellido" 
               value={newPerson.lastName}
               onChange={(e) => setNewPerson({...newPerson, lastName: e.target.value})}
-              className="bg-[#2a2a20] border-[#5d6945] text-[#f5f0dc]"
+              className="bg-[#2a2a20]/70 border-[#5d6945] text-[#f5f0dc]"
             />
             <Input 
               placeholder="Delito" 
               value={newPerson.crime}
               onChange={(e) => setNewPerson({...newPerson, crime: e.target.value})}
-              className="bg-[#2a2a20] border-[#5d6945] text-[#f5f0dc]"
+              className="bg-[#2a2a20]/70 border-[#5d6945] text-[#f5f0dc]"
             />
             <Select 
               value={newPerson.stars.toString()} 
               onValueChange={(val) => setNewPerson({...newPerson, stars: parseInt(val)})}
             >
-              <SelectTrigger className="bg-[#2a2a20] border-[#5d6945] text-[#f5f0dc]">
+              <SelectTrigger className="bg-[#2a2a20]/70 border-[#5d6945] text-[#f5f0dc]">
                 <SelectValue placeholder="Cargos (Estrellas)" />
               </SelectTrigger>
               <SelectContent>
@@ -165,7 +164,7 @@ const WantedList: React.FC = () => {
               value={newPerson.priority} 
               onValueChange={(val: 'Baja' | 'Media' | 'Alta') => setNewPerson({...newPerson, priority: val})}
             >
-              <SelectTrigger className="bg-[#2a2a20] border-[#5d6945] text-[#f5f0dc]">
+              <SelectTrigger className="bg-[#2a2a20]/70 border-[#5d6945] text-[#f5f0dc]">
                 <SelectValue placeholder="Prioridad" />
               </SelectTrigger>
               <SelectContent>
@@ -188,7 +187,7 @@ const WantedList: React.FC = () => {
       
       <div className="rounded-lg overflow-hidden border border-[#5d6945]">
         <Table>
-          <TableHeader className="bg-[#2a2a20]">
+          <TableHeader className="bg-[#2a2a20]/90">
             <TableRow className="border-b border-[#5d6945]">
               <TableHead className="text-[#f5f0dc]">Sospechoso</TableHead>
               <TableHead className="text-[#f5f0dc]">Delito</TableHead>
@@ -200,7 +199,7 @@ const WantedList: React.FC = () => {
           <TableBody>
             {filteredPersons.length > 0 ? (
               filteredPersons.map((person) => (
-                <TableRow key={person.id} className="bg-[#2a2a20]/70 border-b border-[#5d6945] hover:bg-[#3a3325]/50">
+                <TableRow key={person.id} className="bg-[#2a2a20]/70 border-b border-[#5d6945] hover:bg-[#3a3325]/70">
                   <TableCell className="font-medium text-[#f5f0dc]">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-full overflow-hidden bg-[#5d6945] flex items-center justify-center text-white">
@@ -239,7 +238,7 @@ const WantedList: React.FC = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-[#f5f0dc]/70">
+                <TableCell colSpan={5} className="text-center py-8 text-[#f5f0dc]/70 bg-[#2a2a20]/70">
                   No se encontraron sospechosos con los criterios de búsqueda actuales.
                 </TableCell>
               </TableRow>

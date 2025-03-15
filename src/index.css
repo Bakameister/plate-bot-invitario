@@ -96,11 +96,16 @@
 
   /* Glass morphism */
   .glass {
-    @apply bg-white bg-opacity-70 backdrop-blur-md border border-white border-opacity-20 shadow-glass transition-all duration-300;
+    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-glass transition-all duration-300;
   }
   
   .glass:hover {
     @apply shadow-glass-hover;
+  }
+
+  /* Customized for sheriff department theme */
+  .sheriff-ui {
+    @apply backdrop-blur-md bg-gradient-to-r from-[#3a3325]/80 to-[#4a5741]/80 border-2 border-[#5d6945]/50 shadow-md;
   }
 
   /* Shimmer loading effect */

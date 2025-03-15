@@ -43,7 +43,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   return (
     <>
-      <div className="rounded-xl p-6 mb-8 animate-slide-up bg-gradient-to-r from-[#3a3325]/80 to-[#4a5741]/80 border-2 border-[#5d6945]/50 shadow-md" style={{ animationDelay: '100ms' }}>
+      <div className="rounded-xl p-6 mb-8 animate-slide-up backdrop-blur-md bg-gradient-to-r from-[#3a3325]/80 to-[#4a5741]/80 border-2 border-[#5d6945]/50 shadow-md" style={{ animationDelay: '100ms' }}>
         <DashboardHeader />
         
         <BadgeManager 
