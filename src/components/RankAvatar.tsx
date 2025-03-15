@@ -27,7 +27,7 @@ const RankAvatar: React.FC<RankAvatarProps> = ({ className = "" }) => {
   
   return (
     <div className={`relative ${className}`}>
-      <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-md">
+      <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#f5f0dc]/30 shadow-md">
         <img 
           src={rankImage} 
           alt={`Rango de ${user?.username || 'Usuario'}`}
@@ -38,7 +38,7 @@ const RankAvatar: React.FC<RankAvatarProps> = ({ className = "" }) => {
         />
       </div>
       {user?.username && (
-        <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></span>
+        <span className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-[#3a3325]"></span>
       )}
     </div>
   );

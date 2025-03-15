@@ -5,9 +5,10 @@ import BadgeCard from '@/components/BadgeCard';
 import InventoryItem from '@/components/InventoryItem';
 import CommandPanel from '@/components/CommandPanel';
 import BadgeManager from '@/components/BadgeManager';
+import WantedList from '@/components/WantedList';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Award, Package, Users, Activity, Database, LogOut } from 'lucide-react';
+import { Award, Package, Users, Activity, Database, LogOut, Gavel } from 'lucide-react';
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import useAuth from '@/hooks/useAuth';
@@ -152,37 +153,36 @@ const Index: React.FC = () => {
   if (!mounted) return null;
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-bot-light via-white to-bot-light p-6 pb-20 transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-[#2a2a20] via-[#3a3325] to-[#2a2a20] p-6 pb-20 transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
       <div className="max-w-7xl mx-auto">
         <Header />
         
-        <div className="glass rounded-xl p-6 mb-8 animate-slide-up" style={{ animationDelay: '100ms' }}>
+        <div className="rounded-xl p-6 mb-8 animate-slide-up bg-gradient-to-r from-[#3a3325]/80 to-[#4a5741]/80 border-2 border-[#5d6945]/50 shadow-md" style={{ animationDelay: '100ms' }}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-semibold text-bot-dark">Panel de Control</h2>
-              <p className="text-bot-text/70 mt-1">
-                Gestiona tu sistema de placas e inventarios • 
-                {user && <span className="font-medium"> Conectado como {user.username}</span>}
+              <h2 className="text-2xl font-semibold text-[#f5f0dc]">Terminal Sheriff Department</h2>
+              <p className="text-[#f5f0dc]/70 mt-1">
+                {user && <span className="font-medium">Conectado como {user.username}</span>}
               </p>
             </div>
             <div className="flex space-x-3">
-              <Button variant="outline" asChild className="space-x-2">
+              <Button variant="outline" asChild className="space-x-2 border-[#5d6945] text-[#f5f0dc] hover:bg-[#5d6945]/20">
                 <Link to="/users">
                   <Users size={16} />
                   <span>Ver usuarios</span>
                 </Link>
               </Button>
-              <Button variant="outline" asChild className="space-x-2">
+              <Button variant="outline" asChild className="space-x-2 border-[#5d6945] text-[#f5f0dc] hover:bg-[#5d6945]/20">
                 <Link to="/connections">
                   <Database size={16} />
                   <span>Conexiones</span>
                 </Link>
               </Button>
-              <Button variant="default" className="bg-bot-blue hover:bg-bot-accent space-x-2">
+              <Button variant="default" className="bg-[#5d6945] hover:bg-[#6b7552] space-x-2 text-[#f5f0dc]">
                 <Activity size={16} />
                 <span>Estadísticas</span>
               </Button>
-              <Button variant="outline" onClick={logout} className="space-x-2 text-destructive">
+              <Button variant="outline" onClick={logout} className="space-x-2 text-red-400 hover:text-red-500 border-[#5d6945] hover:bg-red-500/10">
                 <LogOut size={16} />
                 <span>Salir</span>
               </Button>
@@ -195,14 +195,27 @@ const Index: React.FC = () => {
           />
           
           <Tabs defaultValue="badges" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-2 w-full max-w-md mb-6">
-              <TabsTrigger value="badges" className="flex items-center space-x-2">
+            <TabsList className="grid grid-cols-3 w-full max-w-md mb-6 bg-[#2a2a20] border border-[#5d6945]">
+              <TabsTrigger 
+                value="badges" 
+                className="flex items-center space-x-2 data-[state=active]:bg-[#5d6945] data-[state=active]:text-[#f5f0dc] text-[#f5f0dc]/70"
+              >
                 <Award size={16} />
                 <span>Placas</span>
               </TabsTrigger>
-              <TabsTrigger value="inventory" className="flex items-center space-x-2">
+              <TabsTrigger 
+                value="inventory" 
+                className="flex items-center space-x-2 data-[state=active]:bg-[#5d6945] data-[state=active]:text-[#f5f0dc] text-[#f5f0dc]/70"
+              >
                 <Package size={16} />
                 <span>Inventario</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="wanted" 
+                className="flex items-center space-x-2 data-[state=active]:bg-[#5d6945] data-[state=active]:text-[#f5f0dc] text-[#f5f0dc]/70"
+              >
+                <Gavel size={16} />
+                <span>Orden y captura</span>
               </TabsTrigger>
             </TabsList>
             
@@ -210,7 +223,7 @@ const Index: React.FC = () => {
               {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-72 rounded-lg shimmer bg-bot-silver/30"></div>
+                    <div key={i} className="h-72 rounded-lg shimmer bg-[#2a2a20]/50 border border-[#5d6945]/50"></div>
                   ))}
                 </div>
               ) : (
@@ -233,7 +246,7 @@ const Index: React.FC = () => {
               {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-64 rounded-lg shimmer bg-bot-silver/30"></div>
+                    <div key={i} className="h-64 rounded-lg shimmer bg-[#2a2a20]/50 border border-[#5d6945]/50"></div>
                   ))}
                 </div>
               ) : (
@@ -251,6 +264,10 @@ const Index: React.FC = () => {
                   ))}
                 </div>
               )}
+            </TabsContent>
+            
+            <TabsContent value="wanted" className="animate-fade-in focus-visible:outline-none">
+              <WantedList />
             </TabsContent>
           </Tabs>
         </div>
