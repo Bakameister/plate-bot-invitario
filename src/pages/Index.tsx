@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import BadgeCard from '@/components/BadgeCard';
 import InventoryItem from '@/components/InventoryItem';
 import CommandPanel from '@/components/CommandPanel';
+import BadgeManager from '@/components/BadgeManager';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Award, Package, Users, Activity, Database, LogOut } from 'lucide-react';
@@ -10,46 +12,63 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import useAuth from '@/hooks/useAuth';
 
-// Mock data for badges
-const badges = [
+interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  imageUrl: string;
+}
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  description: string;
+  quantity: number;
+  imageUrl: string;
+  isEquipped: boolean;
+}
+
+// Initial mock data for badges
+const initialBadges = [
   {
     id: '1',
     name: 'Veterano',
     description: 'Miembro del servidor por más de un año',
-    rarity: 'rare',
-    imageUrl: 'src/assets/badge-placeholder.svg'
+    rarity: 'rare' as const,
+    imageUrl: '/src/assets/badge-placeholder.png'
   },
   {
     id: '2',
     name: 'Colaborador',
     description: 'Ha contribuido significativamente al servidor',
-    rarity: 'epic',
-    imageUrl: 'src/assets/badge-placeholder.svg'
+    rarity: 'epic' as const,
+    imageUrl: '/src/assets/badge-placeholder.png'
   },
   {
     id: '3',
     name: 'Leyenda',
     description: 'Reconocido por su excepcional contribución',
-    rarity: 'legendary',
-    imageUrl: 'src/assets/badge-placeholder.svg'
+    rarity: 'legendary' as const,
+    imageUrl: '/src/assets/badge-placeholder.png'
   },
   {
     id: '4',
     name: 'Recién llegado',
     description: 'Nuevo miembro del servidor',
-    rarity: 'common',
-    imageUrl: 'src/assets/badge-placeholder.svg'
+    rarity: 'common' as const,
+    imageUrl: '/src/assets/badge-placeholder.png'
   }
 ];
 
-// Mock data for inventory items
-const inventoryItems = [
+// Initial mock data for inventory items
+const initialInventoryItems = [
   {
     id: '1',
     name: 'Poción de XP',
     description: 'Aumenta la experiencia ganada por 1 hora',
     quantity: 3,
-    imageUrl: 'src/assets/badge-placeholder.svg',
+    imageUrl: '/src/assets/badge-placeholder.png',
     isEquipped: false
   },
   {
@@ -57,7 +76,7 @@ const inventoryItems = [
     name: 'Borde personalizado',
     description: 'Un borde especial para tu perfil',
     quantity: 1,
-    imageUrl: 'src/assets/badge-placeholder.svg',
+    imageUrl: '/src/assets/badge-placeholder.png',
     isEquipped: true
   },
   {
@@ -65,7 +84,7 @@ const inventoryItems = [
     name: 'Token de cambio de nombre',
     description: 'Permite cambiar tu nombre de usuario',
     quantity: 2,
-    imageUrl: 'src/assets/badge-placeholder.svg',
+    imageUrl: '/src/assets/badge-placeholder.png',
     isEquipped: false
   }
 ];
@@ -73,6 +92,8 @@ const inventoryItems = [
 const Index: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('badges');
+  const [badges, setBadges] = useState<Badge[]>(initialBadges);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>(initialInventoryItems);
   const { user, logout } = useAuth();
 
   useEffect(() => {
@@ -80,10 +101,47 @@ const Index: React.FC = () => {
     const timer = setTimeout(() => {
       setIsLoading(false);
       toast("¡Bienvenido al Panel de Control de TIBI4 Bot!");
-    }, 1500);
+    }, 1000);
+
+    // Load badges and inventory from localStorage if available
+    const storedBadges = localStorage.getItem('discord_badges');
+    const storedInventory = localStorage.getItem('discord_inventory');
+    
+    if (storedBadges) {
+      try {
+        setBadges(JSON.parse(storedBadges));
+      } catch (error) {
+        console.error('Error loading badges:', error);
+      }
+    }
+    
+    if (storedInventory) {
+      try {
+        setInventoryItems(JSON.parse(storedInventory));
+      } catch (error) {
+        console.error('Error loading inventory:', error);
+      }
+    }
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Save changes to localStorage when badges or inventory change
+  useEffect(() => {
+    localStorage.setItem('discord_badges', JSON.stringify(badges));
+  }, [badges]);
+  
+  useEffect(() => {
+    localStorage.setItem('discord_inventory', JSON.stringify(inventoryItems));
+  }, [inventoryItems]);
+
+  const handleAddBadge = (newBadge: Badge) => {
+    setBadges(prev => [...prev, newBadge]);
+  };
+
+  const handleAddInventoryItem = (newItem: InventoryItem) => {
+    setInventoryItems(prev => [...prev, newItem]);
+  };
 
   // Add smooth mount animation
   const [mounted, setMounted] = useState(false);
@@ -108,9 +166,11 @@ const Index: React.FC = () => {
               </p>
             </div>
             <div className="flex space-x-3">
-              <Button variant="outline" className="space-x-2">
-                <Users size={16} />
-                <span>Ver usuarios</span>
+              <Button variant="outline" asChild className="space-x-2">
+                <Link to="/users">
+                  <Users size={16} />
+                  <span>Ver usuarios</span>
+                </Link>
               </Button>
               <Button variant="outline" asChild className="space-x-2">
                 <Link to="/connections">
@@ -128,6 +188,11 @@ const Index: React.FC = () => {
               </Button>
             </div>
           </div>
+          
+          <BadgeManager 
+            onBadgeCreated={handleAddBadge}
+            onItemCreated={handleAddInventoryItem}
+          />
           
           <Tabs defaultValue="badges" value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-2 w-full max-w-md mb-6">
@@ -156,7 +221,7 @@ const Index: React.FC = () => {
                       id={badge.id}
                       name={badge.name}
                       description={badge.description}
-                      rarity={badge.rarity as any}
+                      rarity={badge.rarity}
                       imageUrl={badge.imageUrl}
                     />
                   ))}

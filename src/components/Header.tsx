@@ -3,8 +3,12 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Bell, Settings } from 'lucide-react';
 import BotStatus from './BotStatus';
+import RankAvatar from './RankAvatar';
+import { useAuth } from '@/hooks/useAuth';
 
 const Header: React.FC = () => {
+  const { user } = useAuth();
+
   return (
     <header className="w-full px-8 py-6 flex items-center justify-between glass rounded-lg mb-8 animate-fade-in">
       <div className="flex items-center space-x-4">
@@ -32,9 +36,7 @@ const Header: React.FC = () => {
         <button className="w-9 h-9 rounded-full flex items-center justify-center text-bot-text hover:bg-black/5 transition-colors">
           <Settings size={18} />
         </button>
-        <div className="w-9 h-9 rounded-full bg-bot-silver flex items-center justify-center text-bot-dark text-sm font-medium">
-          A
-        </div>
+        <RankAvatar className="w-9 h-9" />
       </div>
     </header>
   );

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { AlertCircle, Lock, User, Shield } from "lucide-react";
+import { AlertCircle, Lock, User, Shield, Eye, EyeOff } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import useAuth from "@/hooks/useAuth";
 
@@ -22,6 +23,8 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [roleId, setRoleId] = useState("");
+  const [showRoleConfig, setShowRoleConfig] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   
   useEffect(() => {
@@ -29,6 +32,9 @@ const Login: React.FC = () => {
     const savedRoleId = localStorage.getItem("discord_role_id");
     if (savedRoleId) {
       setRoleId(savedRoleId);
+      setShowRoleConfig(false);
+    } else {
+      setShowRoleConfig(true);
     }
   }, []);
 
@@ -37,9 +43,14 @@ const Login: React.FC = () => {
       localStorage.setItem("discord_role_id", roleId.trim());
       toast.success("ID de rol guardado correctamente");
       setError(null);
+      setShowRoleConfig(false);
     } else {
       toast.error("Por favor ingresa un ID de rol válido");
     }
+  };
+
+  const toggleRoleConfig = () => {
+    setShowRoleConfig(!showRoleConfig);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,36 +98,50 @@ const Login: React.FC = () => {
           </p>
         </div>
 
-        {/* Role ID Setup Section */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <div className="flex items-center space-x-2 mb-3">
-            <Shield className="w-4 h-4 text-bot-accent" />
-            <h3 className="text-md font-medium">Configuración de Rol</h3>
-          </div>
-          
-          <div className="space-y-2 mb-3">
-            <Label htmlFor="roleId">ID del Rol de Discord</Label>
-            <div className="flex space-x-2">
-              <Input
-                id="roleId"
-                value={roleId}
-                onChange={(e) => setRoleId(e.target.value)}
-                placeholder="Ej: 123456789012345678"
-                className="flex-1"
-              />
-              <Button 
-                onClick={handleSaveRole}
-                size="sm"
-                className="bg-bot-blue hover:bg-bot-accent"
-              >
-                Guardar
-              </Button>
+        {/* Role ID Setup Section - Only shown when needed or requested */}
+        {showRoleConfig ? (
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center space-x-2 mb-3">
+              <Shield className="w-4 h-4 text-bot-accent" />
+              <h3 className="text-md font-medium">Configuración de Rol</h3>
             </div>
-            <p className="text-xs text-bot-text/60">
-              Debes configurar el ID del rol antes de iniciar sesión
-            </p>
+            
+            <div className="space-y-2 mb-3">
+              <Label htmlFor="roleId">ID del Rol de Discord</Label>
+              <div className="flex space-x-2">
+                <Input
+                  id="roleId"
+                  value={roleId}
+                  onChange={(e) => setRoleId(e.target.value)}
+                  placeholder="Ej: 123456789012345678"
+                  className="flex-1"
+                />
+                <Button 
+                  onClick={handleSaveRole}
+                  size="sm"
+                  className="bg-bot-blue hover:bg-bot-accent"
+                >
+                  Guardar
+                </Button>
+              </div>
+              <p className="text-xs text-bot-text/60">
+                Debes configurar el ID del rol antes de iniciar sesión
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="mb-6 flex justify-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleRoleConfig}
+              className="text-xs text-bot-text/70 flex items-center gap-1"
+            >
+              <Shield className="w-3 h-3" />
+              Configurar ID de rol
+            </Button>
+          </div>
+        )}
 
         {error && (
           <Alert variant="destructive" className="mb-6">
@@ -158,11 +183,18 @@ const Login: React.FC = () => {
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-bot-text/50" />
                       <Input 
-                        type="password" 
+                        type={showPassword ? "text" : "password"}
                         placeholder="Tu contraseña" 
-                        className="pl-10" 
+                        className="pl-10 pr-10" 
                         {...field} 
                       />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-3 text-bot-text/50"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
                     </div>
                   </FormControl>
                   <FormMessage />

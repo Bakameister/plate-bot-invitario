@@ -7,6 +7,8 @@ interface User {
   id: string;
   username: string;
   roles: string[];
+  avatar?: string;
+  rankId?: string;
 }
 
 interface AuthContextType {
@@ -16,9 +18,21 @@ interface AuthContextType {
   logout: () => void;
   login: (username: string, password: string) => Promise<void>;
   hasRole: (roleId: string) => boolean;
+  hasMinimumRank: (rankId: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+// Mock ranks in ascending order (1 is lowest, 7 is highest)
+const RANKS = [
+  { id: "rank1", name: "Novato", minRole: "1026983591978221588", image: "/ranks/rank1.png" },
+  { id: "rank2", name: "Aprendiz", minRole: "1026983591978221588", image: "/ranks/rank2.png" },
+  { id: "rank3", name: "Iniciado", minRole: "1026983591978221588", image: "/ranks/rank3.png" },
+  { id: "rank4", name: "Experto", minRole: "1026983591978221588", image: "/ranks/rank4.png" },
+  { id: "rank5", name: "Maestro", minRole: "1026983591978221588", image: "/ranks/rank5.png" },
+  { id: "rank6", name: "Leyenda", minRole: "1026983591978221588", image: "/ranks/rank6.png" },
+  { id: "rank7", name: "Divinidad", minRole: "1026983591978221588", image: "/ranks/rank7.png" },
+];
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -42,10 +56,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (username: string, password: string) => {
     setIsLoading(true);
     try {
-      // This would normally call the Discord API
+      // This would normally call the MongoDB API via Discord bot command
       // For this demo, we're just doing basic validation
       if (username.length <= 2 || password.length <= 2) {
-        throw new Error("Invalid credentials");
+        throw new Error("Credenciales inválidas");
       }
 
       const expectedRoleId = localStorage.getItem("discord_role_id");
@@ -53,11 +67,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("No role ID configured for verification");
       }
 
-      // Mock user object with the expected role
+      // Determine user's rank - simulate rank assignment
+      // In a real app, this would come from MongoDB
+      const userRank = RANKS[Math.min(Math.floor(Math.random() * RANKS.length), RANKS.length - 1)];
+      
+      // Mock user object with the expected role and rank
       const user = {
-        id: "1234567890",
+        id: "1026983591978221588",
         username,
-        roles: [expectedRoleId] // Mock that user has the expected role
+        roles: [expectedRoleId],
+        avatar: "/placeholder-avatar.png",
+        rankId: userRank.id
       };
 
       localStorage.setItem("discord_user", JSON.stringify(user));
@@ -83,6 +103,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return user.roles.includes(roleId);
   };
 
+  const hasMinimumRank = (rankId: string) => {
+    if (!user || !user.rankId) return false;
+    
+    const userRankIndex = RANKS.findIndex(rank => rank.id === user.rankId);
+    const requiredRankIndex = RANKS.findIndex(rank => rank.id === rankId);
+    
+    if (userRankIndex === -1 || requiredRankIndex === -1) return false;
+    
+    return userRankIndex >= requiredRankIndex;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -91,7 +122,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         login,
         logout,
-        hasRole
+        hasRole,
+        hasMinimumRank
       }}
     >
       {children}
